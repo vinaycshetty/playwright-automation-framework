@@ -1,0 +1,27 @@
+﻿{
+  "name": "playwright-automation-framework",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "cross-env TEST_TYPE=api playwright test",
+    "test:web:client": "cross-env TEST_TYPE=web APP=client playwright test",
+    "test:web:admin": "cross-env TEST_TYPE=web APP=admin playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report reports/html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
+    "cross-env": "^10.1.0"
+  },
+  "dependencies": {
+    "pg": "^8.20.0"
+  }
+}

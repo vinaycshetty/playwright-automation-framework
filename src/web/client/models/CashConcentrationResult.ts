@@ -1,0 +1,8 @@
+export interface CashConcentrationResult {
+  status: string;
+  amount: string;
+  paymentType: string;
+  valueDate?: string;
+  paymentId?: string;
+  invalidAccountMessage?: string;
+}
