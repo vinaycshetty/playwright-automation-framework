@@ -28,25 +28,28 @@ export class CashConcentrationFlow {
 
     // ----- Beneficiaries -----
     const beneNames = paymentData.bene_name.split(',');
-    for (let i = 0; i < beneNames.length; i++) {
-      await ccPage.setBeneficiaryName(beneNames[i]);
-      await ccPage.setBeneficiaryId(
-        paymentData.bene_id.split(',')[i]
-      );
-      await ccPage.setAccountNumber(
-        paymentData.bene_acct_num.split(',')[i]
-      );
-      await ccPage.setAccountType(
-        paymentData.bene_acct_type.split(',')[i]
-      );
-      await ccPage.setAmount(
-        paymentData.amount.split(',')[i]
-      );
+    if (paymentData.multi_bene === "true") {
+      for (let i = 0; i < beneNames.length; i++) {
+        await setBeneficiaryDetails(i);
 
-      if (i < beneNames.length - 1) {
-        await ccPage.addAnotherBeneficiary();
+        if (i < beneNames.length - 1) {
+          await ccPage.addAnotherBeneficiary();
+        }
+        await page.waitForTimeout(1000); // Small wait to ensure the new beneficiary form is ready before filling
       }
+    } else {
+       await setBeneficiaryDetails(0);
     }
+
+    async function setBeneficiaryDetails(index: number) {
+      await ccPage.setBeneficiaryName(beneNames[index]);
+      await ccPage.setBeneficiaryId(paymentData.bene_id.split(",")[index]);
+      await ccPage.setBeneficiaryBank(paymentData.comp_aba.split(",")[index]);
+      await ccPage.setAccountNumber(paymentData.bene_acct_num.split(",")[index]);
+      await ccPage.setAccountType(paymentData.bene_acct_type.split(",")[index]);
+      await ccPage.setAmount(paymentData.amount.split(",")[index]);
+    }
+     
 
     // ----- Submit or Save -----
     if (paymentData.create_save_for_later === 'true') {

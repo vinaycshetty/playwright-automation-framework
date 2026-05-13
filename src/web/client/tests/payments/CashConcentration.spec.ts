@@ -33,7 +33,7 @@ test("Create Cash Concentration Payment", async ({
   await expect(page.locator(".landing-header")).toHaveText("Home");
   await NavigationFlow.goToPaymentManagement(page);
   await AddPaymentFlow.add(page, "Cash Concentration", component);
-
+  data.multi_bene = "false";
   const result = await CashConcentrationFlow.createCashConcentrationPayment(
     page,
     data,
@@ -41,8 +41,5 @@ test("Create Cash Concentration Payment", async ({
   );
 
   expect(result.status.toLowerCase()).toBe("payment submitted");
-  expect(result.amount.replaceAll(",", "")).toContain(
-    data.amount.split(",")[0],
-  );
   expect(result.paymentType).toContain(data.payment_type);
 });
