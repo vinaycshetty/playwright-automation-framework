@@ -5,4 +5,5 @@ export interface CashConcentrationResult {
   valueDate?: string;
   paymentId?: string;
   invalidAccountMessage?: string;
+  templateCode?: string;
 }

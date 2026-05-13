@@ -4,12 +4,22 @@ import { LoginFlow } from "../../flows/LoginFlow";
 import { NavigationFlow } from "../../flows/NavigationFlow";
 import { AddPaymentFlow } from "../../flows/AddPaymentFlow";
 
-test("Create Cash Concentration Payment", async ({
+test("Create Cash Concentration Payment", async ({page,executionContext,login,testData,}) => {
+  await createCashConcentration({page,executionContext,login,testData,component: "PAYMENT",});
+});
+
+test("Create Cash Concentration Template", async ({page,executionContext,login,testData,}) => {
+  await createCashConcentration({page,executionContext,login,testData,component: "TEMPLATE",});
+});
+
+
+async function createCashConcentration({
   page,
   executionContext,
   login,
   testData,
-}) => {
+  component,
+}: any) {
   const creds = await login.get("feederUETR");
 
   // Pull payment test data from Postgres. Replace `cc_smoke_001` and the table
@@ -20,8 +30,6 @@ test("Create Cash Concentration Payment", async ({
       WHERE test_data_id = $1`,
     ["create_freeform_cc_payment"],
   );
-
-  const component: "PAYMENT" | "TEMPLATE" = "PAYMENT";
 
   await LoginFlow.login(page, {
     url: executionContext.environment.client_url,
@@ -40,6 +48,8 @@ test("Create Cash Concentration Payment", async ({
     component,
   );
 
-  expect(result.status.toLowerCase()).toBe("payment submitted");
+  const expectedMessage = component === "PAYMENT" ? "Payment submitted" : "Template submitted";
+
+  expect(result.status.toLowerCase()).toBe(expectedMessage.toLowerCase());
   expect(result.paymentType).toContain(data.payment_type);
-});
+};
