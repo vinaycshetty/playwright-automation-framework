@@ -1,5 +1,5 @@
 import { test, expect } from "../baseApiTest";
-import { AuthenticationModule } from "../authenticationModule";
+import { AuthenticationModule } from "../modules/authenticationModule";
 
 test("Client login API", async ({ apiClient, login, logger }) => {
   // Pull credentials from the configured login table (no hardcoded creds).

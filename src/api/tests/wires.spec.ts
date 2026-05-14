@@ -1,5 +1,5 @@
 import { test, expect } from "../baseApiTest";
-import { AuthenticationModule } from "../authenticationModule";
+import { AuthenticationModule } from "../modules/authenticationModule";
 import { PaymentModule } from "../modules/PaymentModule";
 import { getNextBusinessDate } from "../../utils/dateHelper";
 
@@ -15,16 +15,14 @@ test("create_api_dw_payment", async ({
     FROM btschema.test_data_api_payment 
     WHERE test_data_id='create_api_dw_payment'
   `);
-    
-    
-const requestRow = await testData.one(
-  ` SELECT request_file
+
+  const requestRow = await testData.one(
+    ` SELECT request_file
     FROM btschema.test_data_api_request
     WHERE request_file_id = $1
   `,
-  [data.add_payment_request_id],
-    );
-
+    [data.add_payment_request_id],
+  );
 
   // ✅ Step 2: Get login from DB
   const creds = await login.get("api1");
@@ -46,8 +44,8 @@ const requestRow = await testData.one(
   expect(await loginRes.text()).toContain("Login successful");
 
   // ✅ Step 4: Prepare dynamic values
-    const today = getNextBusinessDate();
-    logger.info(`Next business date calculated as: ${today}`);
+  const today = getNextBusinessDate();
+  logger.info(`Next business date calculated as: ${today}`);
 
   data.tran_date = today;
   data.value_date = today;
@@ -60,8 +58,8 @@ const requestRow = await testData.one(
 
   // ✅ Step 5: Call Payment API
   const payment = new PaymentModule(api, logger);
-    console.log("Token in wires.spec.ts:", token);
-  const template = requestRow.request_file; 
+  console.log("Token in wires.spec.ts:", token);
+  const template = requestRow.request_file;
   const { response: paymentRes, body } = await payment.paymentRequest(
     data,
     token,

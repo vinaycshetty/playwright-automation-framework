@@ -1,9 +1,9 @@
 import { APIResponse } from "@playwright/test";
 import * as fs from "fs";
 import * as path from "path";
-import { BaseApiClient } from "../core/base/BaseApiClient";
-import { Logger } from "../core/logger/logger";
-import { transformRequest } from "../utils/requestTemplateUtil";
+import { BaseApiClient } from "../../core/base/BaseApiClient";
+import { Logger } from "../../core/logger/logger";
+import { transformRequest } from "../../utils/requestTemplateUtil";
 
 const REQUEST_TEMPLATES_DIR = path.resolve("src/api/requests");
 const LOGIN_PATH = "/banking-services/api/security/login";
@@ -41,11 +41,9 @@ export class AuthenticationModule {
     const template = fs.readFileSync(templatePath, "utf-8");
     const body = transformRequest(template, testData);
 
-    
-const response = await this.api.post(LOGIN_PATH, {
-  data: body,
-});
-
+    const response = await this.api.post(LOGIN_PATH, {
+      data: body,
+    });
 
     let parsed: any;
     try {
