@@ -6,12 +6,9 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-reports/
-reports\html\index.html
-reports\html\index.json
-reports\html\index.xml
 
 # Framework
 /.cache/
 /.env
 /.env.local
+*.html
