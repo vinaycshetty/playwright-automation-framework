@@ -17,4 +17,5 @@ test("Client login API", async ({ apiClient, login, logger }) => {
   expect(response.ok()).toBeTruthy();
   expect(token).toBeTruthy();
   logger.info(`Authenticated, token length=${token.length}`);
+  console.log("Token in authenticate.spec.ts:", token);
 });

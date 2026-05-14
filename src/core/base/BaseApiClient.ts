@@ -60,8 +60,21 @@ export class BaseApiClient {
     }
   }
 
-  async post(url: string, body?: unknown): Promise<APIResponse> {
-    return this.timed("POST", url, () => this.api.post(url, { data: body }));
+  async post(
+    url: string,
+    options?: {
+      data?: unknown;
+      headers?: Record<string, string>;
+    },
+  ): Promise<APIResponse> {
+    return this.timed("POST", url, () =>
+      this.api.post(url, {
+        data: options?.data,
+        headers: {
+          ...options?.headers, // ✅ ONLY custom headers
+        },
+      }),
+    );
   }
 
   async get(url: string): Promise<APIResponse> {

@@ -41,7 +41,11 @@ export class AuthenticationModule {
     const template = fs.readFileSync(templatePath, "utf-8");
     const body = transformRequest(template, testData);
 
-    const response = await this.api.post(LOGIN_PATH, body);
+    
+const response = await this.api.post(LOGIN_PATH, {
+  data: body,
+});
+
 
     let parsed: any;
     try {
