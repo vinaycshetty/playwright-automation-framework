@@ -7,7 +7,9 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 /reports/
-/report/html/*
+/report/html/index.html
+report/html/index.json
+report/html/index.xml
 
 # Framework
 /.cache/
