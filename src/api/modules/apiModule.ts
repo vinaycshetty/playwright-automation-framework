@@ -1,12 +1,12 @@
 import { APIRequestContext } from "@playwright/test";
 
-export class PaymentModule {
+export class APIModule {
   constructor(
     private api: APIRequestContext,
     private logger: any,
   ) {}
 
-  async paymentRequest(testData: Record<string, any>, token: string, requestTemplate: any) {
+  async apiRequest(testData: Record<string, any>, token: string, requestTemplate: any) {
     this.logger.info("Adding the payment...");
 
     const requestBody = this.transformReqBody(
@@ -14,7 +14,7 @@ export class PaymentModule {
       testData,
       );
       this.logger.info(`Transformed Request Body: ${JSON.stringify(requestBody)}`);
-console.log("Token in PaymentModule:", token);
+console.log("Token in APIModule:", token);
     const response = await this.api.post(testData.add_payment_end_point, {
       data: requestBody,
       headers: {

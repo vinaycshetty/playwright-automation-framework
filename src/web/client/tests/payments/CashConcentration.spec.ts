@@ -3,8 +3,9 @@ import { CashConcentrationFlow } from "../../flows/CashConcentrationFlow";
 import { LoginFlow } from "../../flows/LoginFlow";
 import { NavigationFlow } from "../../flows/NavigationFlow";
 import { AddPaymentFlow } from "../../flows/AddPaymentFlow";
+import { getFeeder } from "../../../../utils/feederHelper";
 
-test("Create Cash Concentration Payment", async ({page,executionContext,login,testData,}) => {
+test.only("@smoke Create Cash Concentration Payment", async ({page,executionContext,login,testData,}) => {
   await createCashConcentration({page,executionContext,login,testData,component: "PAYMENT",});
 });
 
@@ -20,7 +21,7 @@ async function createCashConcentration({
   testData,
   component,
 }: any) {
-  const creds = await login.get("feederUETR");
+  const creds = await login.get(getFeeder("feederUETR", 1));
 
   // Pull payment test data from Postgres. Replace `cc_smoke_001` and the table
   // name with whatever your test-data schema uses; SQL is parameterized.

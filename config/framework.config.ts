@@ -7,7 +7,7 @@ export interface FrameworkConfig {
 }
 
 export const frameworkConfig: FrameworkConfig = {
-  executionId: process.env.EXECUTION_ID ?? 'qa8',
+  executionId: process.env.EXECUTION_ID ?? 'dev2',
   testType: (process.env.TEST_TYPE as 'web' | 'api') ?? 'api',
   app: (process.env.APP as 'admin' | 'client') ?? 'client',
   runMode: (process.env.RUN_MODE as 'local' | 'grid') ?? 'local',
