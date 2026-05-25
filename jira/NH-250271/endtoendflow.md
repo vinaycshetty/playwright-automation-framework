@@ -5,6 +5,7 @@ This document records the exact end-to-end steps performed in this session for s
 ## Overview
 
 Work performed:
+
 - Fetched Jira issue `NH-250271` and exported it to `Jira/NH-250271/NH-250271.md`.
 - Created a suite of test case markdown files under `testcases/NH-250271/` (TC-01..TC-20).
 - Ran the Playwright crawler (headed) to capture page locators and saved output under `Jira/Locator/NH-250271/`.
@@ -23,20 +24,24 @@ Work performed:
 
 ## Chronological step-by-step actions (what I did and the commands used)
 
-1) Fetch Jira issue NH-250271
+1. Fetch Jira issue NH-250271
+
 - Action: Retrieved the story from Jira and exported details into a Markdown file.
 - Output file:
   - `Jira/NH-250271/NH-250271.md`
 
-2) Create test-case files
+2. Create test-case files
+
 - Action: Wrote 20 test-case markdown files covering positive, negative, edge, performance, and E2E scenarios.
 - Location: `testcases/NH-250271/`
 
-3) Prepare crawler steps file
+3. Prepare crawler steps file
+
 - Action: Created a short `steps.md` in `Jira/NH-250271/` to instruct manual login during a headed crawler run.
 - File: `Jira/NH-250271/steps.md`
 
-4) Run Playwright crawler (headed) to capture locators
+4. Run Playwright crawler (headed) to capture locators
+
 - Purpose: Open the application in a headed browser so the tester can log in manually and navigate; crawler captures DOM locators and emits a Playwright page object.
 - Command executed (run in repository root):
 
@@ -50,7 +55,8 @@ npx ts-node tools/agents/agent-crawler.ts --url "https://dgb-qa8-fi4423-web02.sa
     - `Jira/Locator/NH-250271/NH-250271Locator.ts`
     - `Jira/Locator/NH-250271/NH-250271Locator.locators.json`
 
-5) Convert generated locators into project page-object + flow + spec
+5. Convert generated locators into project page-object + flow + spec
+
 - Files added:
   - `src/web/client/pages/imports/WiresFromTemplatePage.ts` — page object (wraps import map selection, template code field, file upload, test-mode toggle, start import, wait for result).
   - `src/web/client/flows/WiresFromTemplateFlow.ts` — flow to navigate to payment management and perform the import steps.
@@ -59,15 +65,16 @@ npx ts-node tools/agents/agent-crawler.ts --url "https://dgb-qa8-fi4423-web02.sa
 - How the flow is used in the spec (example):
 
 ```ts
-const sampleFile = 'test-data/wires-from-template-sample.csv';
+const sampleFile = "test-data/wires-from-template-sample.csv";
 await WiresFromTemplateFlow.importFromTemplate(page, sampleFile, {
-  mapName: 'Wires from Template',
-  templateCode: 'DRAWDOWN-EXAMPLE',
+  mapName: "Wires from Template",
+  templateCode: "DRAWDOWN-EXAMPLE",
   testMode: true,
 });
 ```
 
-6) Page-object implementation notes
+6. Page-object implementation notes
+
 - The page-object created uses selectors discovered by the crawler and provides helper methods:
   - `selectImportMap(mapName)`
   - `enableCreateFromTemplate(enable)`
@@ -76,7 +83,8 @@ await WiresFromTemplateFlow.importFromTemplate(page, sampleFile, {
   - `setTestMode(enabled)`
   - `clickImport()` and `waitForImportComplete()`
 
-7) How to run the new spec locally
+7. How to run the new spec locally
+
 - Ensure dependencies are installed and Playwright browsers are available per the project's README.
 - Example command to run the single spec (from repository root):
 
@@ -116,4 +124,3 @@ npm run test:web:client
 
 Generated on: 2026-05-25
 Session: actions performed interactively via the assistant
-

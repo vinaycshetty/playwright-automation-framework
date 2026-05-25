@@ -5,12 +5,12 @@ export class WiresFromTemplatePage {
   constructor(private page: Page) {}
 
   // Key selectors (sourced from the generated locators)
-  private importTypeSelect = '#IMPORTTYPE';
-  private createFromTemplateCheckbox = '#CREATEFROM-createFromTemplate';
-  private templateCodeInput = '#TEMPLATECODE';
+  private importTypeSelect = "#IMPORTTYPE";
+  private createFromTemplateCheckbox = "#CREATEFROM-createFromTemplate";
+  private templateCodeInput = "#TEMPLATECODE";
   private fileInput = '[name="fileimport"]';
-  private testModeCheckbox = '#TESTMODE';
-  private snackbar = '#snackbar-container';
+  private testModeCheckbox = "#TESTMODE";
+  private snackbar = "#snackbar-container";
 
   // Utility getters
   private locator(sel: string): Locator {
@@ -30,7 +30,7 @@ export class WiresFromTemplatePage {
   async enableCreateFromTemplate(enable = true) {
     const el = this.locator(this.createFromTemplateCheckbox);
     if (!(await el.isVisible().catch(() => false))) return;
-    const checked = (await el.getAttribute('checked')) !== null;
+    const checked = (await el.getAttribute("checked")) !== null;
     if (Boolean(checked) !== enable) await el.click();
   }
 
@@ -46,13 +46,17 @@ export class WiresFromTemplatePage {
   async setTestMode(enabled = true) {
     const el = this.locator(this.testModeCheckbox);
     if (!(await el.isVisible().catch(() => false))) return;
-    const checked = (await el.getAttribute('checked')) !== null;
+    const checked = (await el.getAttribute("checked")) !== null;
     if (Boolean(checked) !== enabled) await el.click();
   }
 
   async clickImport() {
     // Try common button labels used by the app
-    const btn = this.page.locator("button:has-text('Import'), button:has-text('Upload'), button:has-text('Start')").first();
+    const btn = this.page
+      .locator(
+        "button:has-text('Import'), button:has-text('Upload'), button:has-text('Start')",
+      )
+      .first();
     await btn.click();
   }
 

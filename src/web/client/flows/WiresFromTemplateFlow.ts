@@ -3,7 +3,11 @@ import { WiresFromTemplatePage } from "../pages/imports/WiresFromTemplatePage";
 import { NavigationFlow } from "./NavigationFlow";
 
 export class WiresFromTemplateFlow {
-  static async importFromTemplate(page: Page, filePath: string, opts?: { mapName?: string; templateCode?: string; testMode?: boolean; }) {
+  static async importFromTemplate(
+    page: Page,
+    filePath: string,
+    opts?: { mapName?: string; templateCode?: string; testMode?: boolean },
+  ) {
     // Navigate to Payments / Import area
     await NavigationFlow.goToPaymentManagement(page);
 
