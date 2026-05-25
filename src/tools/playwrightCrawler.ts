@@ -223,7 +223,8 @@ export async function crawl(opts: CrawlOptions) {
       const scope = (root || document) as Element | Document;
 
       // Only collect standard controls and elements exposing testing hooks within the scope
-      const nodeList = Array.from(scope.querySelectorAll('input,select,textarea,button,[data-qa],[data-testid]'));
+      // Broaden selector set to capture anchors, labels, div/span with roles or data hooks
+      const nodeList = Array.from(scope.querySelectorAll('a,input,select,textarea,button,label,name,div,span,[data-qa],[data-action],[role="button"],[role="link"]'));
       const out = nodeList.slice(0, max || 500).map((n) => {
         const e = n as HTMLElement & { dataset: any };
         // ignore non-interactive or hidden elements
@@ -234,35 +235,62 @@ export async function crawl(opts: CrawlOptions) {
           if (style && (style.visibility === 'hidden' || style.display === 'none' || style.opacity === '0')) return null;
         } catch (err) {}
         let dataQa = null as string|null;
-        let dataTestId = null as string|null;
+        let dataAction = null as string|null;
         if (e.getAttribute) {
           dataQa = (e.getAttribute('data-qa') || e.getAttribute('dataQa')) || null;
-          dataTestId = (e.getAttribute('data-testid') || e.getAttribute('dataTestid')) || null;
+          dataAction = (e.getAttribute('data-action') || e.getAttribute('dataAction')) || null;
         }
         // if the element itself doesn't have a testing hook, try its closest ancestor
         if (!dataQa) {
           const anc = (e.closest && e.closest('[data-qa]')) as Element | null;
           if (anc && anc.getAttribute) dataQa = (anc.getAttribute('data-qa') || anc.getAttribute('dataQa')) || null;
         }
-        if (!dataTestId) {
-          const anc = (e.closest && e.closest('[data-testid]')) as Element | null;
-          if (anc && anc.getAttribute) dataTestId = (anc.getAttribute('data-testid') || anc.getAttribute('dataTestid')) || null;
+        if (!dataAction) {
+          const anc = (e.closest && e.closest('[data-action]')) as Element | null;
+          if (anc && anc.getAttribute) dataAction = (anc.getAttribute('data-action') || anc.getAttribute('dataAction')) || null;
         }
+        // include clickable detection: anchors with href, elements with onclick or role=button
+        const onclick = (e.getAttribute && e.getAttribute('onclick')) || null;
+        const href = (e.getAttribute && e.getAttribute('href')) || null;
+        // Try to resolve an associated label for inputs/selects/textareas
+        let labelText: string | null = null;
+        try {
+          const id = e.id;
+          if (id) {
+            const lab = document.querySelector(`label[for="${id}"]`);
+            if (lab && lab.textContent) labelText = (lab.textContent || '').trim().replace(/\s+/g, ' ');
+          }
+          if (!labelText) {
+            const closestLabel = (e.closest && e.closest('label')) as Element | null;
+            if (closestLabel && closestLabel.textContent) labelText = (closestLabel.textContent || '').trim().replace(/\s+/g, ' ');
+          }
+        } catch (err) {}
+
+        // Only return common control types or elements that expose role/label/hook
+        const tagLower = e.tagName.toLowerCase();
+        const allowedTags = ['input','select','textarea','button','a','label'];
+        const roleAttr = e.getAttribute && e.getAttribute('role');
+        const hasHook = dataQa || dataAction || (e.getAttribute && e.getAttribute('name')) || e.id || href || onclick || roleAttr || labelText;
+        if (!allowedTags.includes(tagLower) && !hasHook) return null;
+
         return {
           tag: e.tagName.toLowerCase(),
           id: e.id || null,
           name: (e.getAttribute && e.getAttribute('name')) || null,
           dataQa,
-          dataTestId,
+          dataAction,
           role: e.getAttribute && e.getAttribute('role') || null,
-          text: (e.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 120),
+          label: labelText || null,
+          text: (e.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 240),
           classes: e.className || null,
+          href,
+          onclick,
           xpath: getXPath(e),
         };
       });
       // filter nulls and only return interactive types
       return out.filter(Boolean) as any[];
-      }, { max: opts.maxElements || 500, rootSel: opts.rootSelector || null }) as any[];
+      }, { max: opts.maxElements || 1000, rootSel: opts.rootSelector || null }) as any[];
     } catch (errEval) {
       // capture a small snapshot to help debugging
       try {
