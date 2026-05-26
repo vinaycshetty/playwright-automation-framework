@@ -47,6 +47,12 @@ Work performed:
 
 ```powershell
 npx ts-node tools/agents/agent-crawler.ts --url "https://dgb-qa8-fi4423-web02.saas-n.com/ui" --steps "Jira/NH-250271/steps.md" --out "Jira/Locator/NH-250271/NH-250271Locator.ts" --headed true
+
+or 
+
+if you dont have steps.md file
+
+npx ts-node scripts/generate-page-locators.ts --url "https://dgb-qa8-fi4423-web02.saas-n.com/ui" --out Jira/Locator/TC-NH-256385-Locator-clean2.ts --headed true --waitForUser true --wait-for-selector "input[name="AMOUNT"]" --maxElements 2000 --top 400
 ```
 
 - Notes:
